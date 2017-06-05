@@ -11,7 +11,8 @@ namespace BookingApp.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class Region
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,7 +23,9 @@ namespace BookingApp.Models
     
         public int Id { get; set; }
         public string Name { get; set; }
-    
+
+        [ForeignKey("Country")]
+        public int Country_Id { get; set; }
         public virtual Country Country { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Place> Places { get; set; }

@@ -35,20 +35,19 @@ namespace BookingApp.Models
         public virtual ICollection<Comment> Comments { get; set; }
 
         [ForeignKey("AccommodationType")]
-        public int AccommodationTypeId { get; set; }
+        public int AccommodationType_Id { get; set; }
         public virtual AccommodationType AccommodationType { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Room> Rooms { get; set; }
 
-        
-        public int User_Id { get; set; }
 
-        [ForeignKey("User_Id")]
+        [ForeignKey("User")]
+        public int User_Id { get; set; }
         public virtual User User { get; set; }
 
+        [ForeignKey("Place")]
         public int Place_Id { get; set; }
-
-        [ForeignKey("Place_Id")]
         public virtual Place Place { get; set; }
     }
 }
