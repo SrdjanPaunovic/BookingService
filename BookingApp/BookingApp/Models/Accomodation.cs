@@ -11,6 +11,7 @@ namespace BookingApp.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     public partial class Accomodation
     {
@@ -22,8 +23,10 @@ namespace BookingApp.Models
         }
     
         public int Id { get; set; }
+        [StringLength(30)]
         public string Name { get; set; }
         public string Description { get; set; }
+        [StringLength(50)]
         public string Address { get; set; }
         public string AverageGrade { get; set; }
         public string Latitude { get; set; }
@@ -42,9 +45,9 @@ namespace BookingApp.Models
         public virtual ICollection<Room> Rooms { get; set; }
 
 
-        [ForeignKey("User")]
-        public int User_Id { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("AppUser")]
+        public int AppUser_Id { get; set; }
+        public virtual AppUser AppUser { get; set; }
 
         [ForeignKey("Place")]
         public int Place_Id { get; set; }

@@ -16,7 +16,10 @@ namespace BookingApp.Models
     public partial class RoomReseravtion
     {
         public System.DateTime StartDate { get; set; }
+
+
         public System.DateTime EndTime { get; set; }
+
         public System.DateTime Timestamp { get; set; }
 
         [ForeignKey("Room")]
@@ -25,10 +28,10 @@ namespace BookingApp.Models
         public int Room_Id { get; set; }
         public virtual Room Room { get; set; }
 
-        [ForeignKey("User")]
+        [ForeignKey("AppUser")]
         [Key]
         [Column(Order = 2)]
-        public int User_Id { get; set; }
-        public virtual User User { get; set; }
+        public int AppUser_Id { get; set; }
+        public virtual AppUser AppUser { get; set; }
     }
 }

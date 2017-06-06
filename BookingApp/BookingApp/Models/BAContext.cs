@@ -12,7 +12,6 @@ namespace BookingApp.Models
     {   
         public virtual DbSet<AppUser> AppUsers { get; set; }
 
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Region> Regions { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Accomodation> Accomodations { get; set; }
@@ -23,7 +22,9 @@ namespace BookingApp.Models
         public virtual DbSet<RoomReseravtion> RoomReseravtions { get; set; }
 
         public BAContext() : base("name=ContextDb")
-        {            
+        {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         public static BAContext Create()

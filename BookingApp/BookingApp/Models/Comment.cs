@@ -22,9 +22,9 @@ namespace BookingApp.Models
         public int Accomodation_Id { get; set; }
         public virtual Accomodation Accomodation { get; set; }
 
-        [ForeignKey("User")]
-        public int User_Id { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("AppUser")]
+        public int AppUser_Id { get; set; }
+        public virtual AppUser AppUser { get; set; }
 
     }
 }
