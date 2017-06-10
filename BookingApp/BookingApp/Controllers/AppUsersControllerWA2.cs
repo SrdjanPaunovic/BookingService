@@ -61,7 +61,8 @@ namespace BookingApp.Controllers
         {   
             bool isAdmin = UserManager.IsInRole(User.Identity.Name, "Admin");//User.Identity.Name => Username Identity User-a! UserManager trazi po njegovom username-u, i onda poredi! 
             var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);//Vadimo iz Identity baze po username-u Identity User-a, koji u sebi sadrzi AppUser-a!
-            if (isAdmin || (user != null && user.appUserId.Equals(id)))//Ako korisnik nije admin, i nije AppUser koji trazi podatke o sebi, nije autorizovan!
+            if (isAdmin || (user != null ))//Ako korisnik nije admin, i nije AppUser koji trazi podatke o sebi, nije autorizovan!
+                //if (isAdmin || (user != null && user.appUserId.Equals(id)))//Ako korisnik nije admin, i nije AppUser koji trazi podatke o sebi, nije autorizovan!
             {
                 AppUser appUser = db.AppUsers.Find(id);
                 if (appUser == null)

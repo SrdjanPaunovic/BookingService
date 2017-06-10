@@ -74,7 +74,7 @@ namespace BookingApp.Migrations
             if (!context.Users.Any(u => u.UserName == "admin"))
             {
                 var _appUser = context.AppUsers.FirstOrDefault(a => a.FullName == "Admin Adminovic");
-                var user = new BAIdentityUser() { Id = "admin", UserName = "admin", Email = "admin@yahoo.com", PasswordHash = BAIdentityUser.HashPassword("admin"), appUserId = _appUser.Id };
+                var user = new BAIdentityUser() { Id = "admin", UserName = "admin", Email = "admin@yahoo.com", PasswordHash = BAIdentityUser.HashPassword("admin"), appUser = _appUser};
                 userManager.Create(user);
                 userManager.AddToRole(user.Id, "Admin");
             }
@@ -82,7 +82,7 @@ namespace BookingApp.Migrations
             if (!context.Users.Any(u => u.UserName == "appu"))
             {
                 var _appUser = context.AppUsers.FirstOrDefault(a => a.FullName == "AppUser AppUserovic");
-                var user = new BAIdentityUser() { Id = "appu", UserName = "appu", Email = "appu@yahoo.com", PasswordHash = BAIdentityUser.HashPassword("appu"), appUserId = _appUser.Id };
+                var user = new BAIdentityUser() { Id = "appu", UserName = "appu", Email = "appu@yahoo.com", PasswordHash = BAIdentityUser.HashPassword("appu"), appUser = _appUser };
                 userManager.Create(user);
                 userManager.AddToRole(user.Id, "AppUser");
             }
