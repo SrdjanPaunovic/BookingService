@@ -124,7 +124,7 @@ namespace BookingApp.Migrations
             AddColumn("dbo.AspNetUsers", "appUserId", c => c.Int(nullable: false));
             AlterColumn("dbo.AppUsers", "FullName", c => c.String(maxLength: 100));
             CreateIndex("dbo.AspNetUsers", "appUserId");
-            AddForeignKey("dbo.AspNetUsers", "appUserId", "dbo.AppUsers", "Id", cascadeDelete: true);
+            AddForeignKey("dbo.AspNetUsers", "appUserId", "dbo.AppUsers", "Id", cascadeDelete: false);
         }
         
         public override void Down()

@@ -34,6 +34,11 @@ namespace BookingApp.Models
 
     public class RegisterBindingModel
     {
+
+        [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }

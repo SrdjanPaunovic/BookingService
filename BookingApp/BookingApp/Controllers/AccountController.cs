@@ -23,6 +23,9 @@ namespace BookingApp.Controllers
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
+        #region Basics
+        private BAContext db = new BAContext();
+
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
@@ -48,9 +51,12 @@ namespace BookingApp.Controllers
                 _userManager = value;
             }
         }
+        #endregion
+        #region Methods
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
-
+       
+        
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
@@ -318,27 +324,7 @@ namespace BookingApp.Controllers
             return logins;
         }
 
-        // POST api/Account/Register
-        [AllowAnonymous]
-        [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = new BAIdentityUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
+       
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
@@ -370,6 +356,34 @@ namespace BookingApp.Controllers
             {
                 return GetErrorResult(result); 
             }
+            return Ok();
+        }
+
+        #endregion
+
+        // POST api/Account/Register
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            AppUser appUser = new AppUser() { FullName = model.Email };
+            db.AppUsers.Add(appUser);
+            db.SaveChanges();
+
+
+            var user = new BAIdentityUser(appUser, model.Email, model.Email);
+
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
             return Ok();
         }
 
