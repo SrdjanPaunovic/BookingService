@@ -9,13 +9,22 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BookingApp.Models;
+using System.Threading.Tasks;
+using BookingApp.BindingModels;
+using Microsoft.AspNet.Identity;
+
 
 namespace BookingApp.Controllers
 {
+    [Authorize]
+    [RoutePrefix("api/Accomodation")]
     public class AccomodationsController : ApiController
     {
+        
         private BAContext db = new BAContext();
 
+        #region GeneratedCode 
+        /*
         // GET: api/Accomodations
         public IQueryable<Accomodation> GetAccomodations()
         {
@@ -114,5 +123,25 @@ namespace BookingApp.Controllers
         {
             return db.Accomodations.Count(e => e.Id == id) > 0;
         }
+        */
+
+
+
+        #endregion
+
+        [Route("AddAccomodation")]
+        public async Task<IHttpActionResult> AddAccomodation(AccomodationBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+           
+
+
+
+            return Ok();
+        }
+
     }
 }

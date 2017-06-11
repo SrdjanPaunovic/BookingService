@@ -13,9 +13,10 @@ namespace BookingApp.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        
         [MaxLength(100)]
         public string FullName { get; set; }
 
-       
+        public bool IsForbidden { get; set; }
     }
 }

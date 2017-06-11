@@ -12,6 +12,7 @@ namespace BookingApp.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     public partial class AccommodationType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,7 +20,10 @@ namespace BookingApp.Models
         {
             this.Accomodations = new HashSet<Accomodation>();
         }
-    
+
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [StringLength(30)]
         public string Name { get; set; }
