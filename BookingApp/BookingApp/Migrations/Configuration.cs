@@ -73,7 +73,7 @@ namespace BookingApp.Migrations
             var userManager = new UserManager<BAIdentityUser>(userStore);
             if (!context.Users.Any(u => u.UserName == "admin"))
             {
-                var _appUser = context.AppUsers.FirstOrDefault(a => a.UserName == "Admin Adminovic");
+                var _appUser = context.AppUsers.FirstOrDefault(a => a.UserName == "admin");
                 var user = new BAIdentityUser() { Id = "admin", UserName = "admin", Email = "admin@yahoo.com", PasswordHash = BAIdentityUser.HashPassword("admin"), appUser = _appUser};
                 userManager.Create(user);
                 userManager.AddToRole(user.Id, "Admin");
