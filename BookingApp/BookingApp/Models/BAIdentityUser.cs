@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -26,7 +27,7 @@ namespace BookingApp.Models
         [ForeignKey("appUser")]
         public int appUserId { get; set; }
 
-        public AppUser appUser { get; set; }
+        public  AppUser appUser { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<BAIdentityUser> manager, string authenticationType)
         {
