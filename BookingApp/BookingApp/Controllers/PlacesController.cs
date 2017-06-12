@@ -13,17 +13,21 @@ using BookingApp.Models;
 
 namespace BookingApp.Controllers
 {
+    [RoutePrefix("place")]
     public class PlacesController : ApiController
     {
         private BAContext db = new BAContext();
 
-        // GET: api/Places
+        [HttpGet]
+        [Route("places", Name = "PlaceApi")]
         public IQueryable<Place> GetPlaces()
         {
             return db.Places;
         }
 
-        // GET: api/Places/5
+
+        [HttpGet]
+        [Route("place/{id}")]
         [ResponseType(typeof(Place))]
         public async Task<IHttpActionResult> GetPlace(int id)
         {
@@ -36,7 +40,8 @@ namespace BookingApp.Controllers
             return Ok(place);
         }
 
-        // PUT: api/Places/5
+        [HttpPut]
+        [Route("place/{id}")]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutPlace(int id, Place place)
         {
@@ -71,7 +76,8 @@ namespace BookingApp.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Places
+        [HttpPost]
+        [Route("place")]
         [ResponseType(typeof(Place))]
         public async Task<IHttpActionResult> PostPlace(Place place)
         {
@@ -83,10 +89,11 @@ namespace BookingApp.Controllers
             db.Places.Add(place);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = place.Id }, place);
+            return CreatedAtRoute("PlaceApi", new { id = place.Id }, place);
         }
 
-        // DELETE: api/Places/5
+        [HttpDelete]
+        [Route("place/{id}")]
         [ResponseType(typeof(Place))]
         public async Task<IHttpActionResult> DeletePlace(int id)
         {
