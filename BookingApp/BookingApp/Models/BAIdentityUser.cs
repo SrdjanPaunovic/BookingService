@@ -15,9 +15,9 @@ namespace BookingApp.Models
     {
         public BAIdentityUser() { }
 
-        public BAIdentityUser( AppUser user,string username,string email)
+        public BAIdentityUser( int appUserId,string username,string email)
         {
-            appUser = user;
+            this.appUserId = appUserId;
             this.UserName = username;
             this.Email = email;
                        

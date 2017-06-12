@@ -36,16 +36,18 @@ namespace BookingApp.Controllers
         [Route("AddType")]
         [HttpPost]
 
-        public async Task<IHttpActionResult> PutAccommodationType(AccommodationType accommodationType)
+        public async Task<IHttpActionResult> AddAccommodationType(AccommodationType entryType)
         {
-            AccommodationType accommType = new AccommodationType();
-            accommType.Name = accommodationType.Name;
-
-            db.Entry(accommodationType).State = EntityState.Modified;
+            AccommodationType accommodationType = new AccommodationType();
+            accommodationType.Name = entryType.Name;
+            db.AccommodationTypes.Add(accommodationType);
 
             try
             {
+
                 await db.SaveChangesAsync();
+                return StatusCode(HttpStatusCode.OK);
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -55,11 +57,12 @@ namespace BookingApp.Controllers
                 }
                 else
                 {
+                    return StatusCode(HttpStatusCode.NoContent);
                     throw;
+
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
      

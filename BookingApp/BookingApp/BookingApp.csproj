@@ -291,6 +291,14 @@
     <Compile Include="Migrations\201706110942281_mgr-v2.Designer.cs">
       <DependentUpon>201706110942281_mgr-v2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706120924495_mgr-v3.cs" />
+    <Compile Include="Migrations\201706120924495_mgr-v3.Designer.cs">
+      <DependentUpon>201706120924495_mgr-v3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706120929519_mgr-v4.cs" />
+    <Compile Include="Migrations\201706120929519_mgr-v4.Designer.cs">
+      <DependentUpon>201706120929519_mgr-v4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccommodationType.cs" />
     <Compile Include="Models\Accomodation.cs" />
@@ -399,6 +407,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706110942281_mgr-v2.resx">
       <DependentUpon>201706110942281_mgr-v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706120924495_mgr-v3.resx">
+      <DependentUpon>201706120924495_mgr-v3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706120929519_mgr-v4.resx">
+      <DependentUpon>201706120929519_mgr-v4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

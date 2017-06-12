@@ -16,132 +16,75 @@ using Microsoft.AspNet.Identity;
 
 namespace BookingApp.Controllers
 {
-    [Authorize]
-    [RoutePrefix("api/Accomodation")]
+    //[Authorize]
+    [RoutePrefix("api/Accommodation")]
     public class AccomodationsController : ApiController
     {
-        
         private BAContext db = new BAContext();
 
-        #region GeneratedCode 
-        /*
-        // GET: api/Accomodations
-        public IQueryable<Accomodation> GetAccomodations()
+
+      //  [AllowAnonymous]
+        [Route("AddAccommodation")]
+        [HttpPost]
+
+        public async Task<IHttpActionResult> AddAccommodation(AccomodationBindingModel entryAccommodation)
         {
-            return db.Accomodations;
-        }
+            string[] cleanName = entryAccommodation.Username.Split('\n');
+            var owner1 = db.AppUsers.FirstOrDefault<AppUser>(a => a.UserName == "admin");
+            var uname = cleanName[0];
+            var owner = db.AppUsers.FirstOrDefault<AppUser>(a => a.UserName== uname);
+            var list = db.AppUsers.ToList();
+          //  var place = db.Places.FirstOrDefault<Place>(a => a.Name ==entryAccommodation.PlaceName);
 
-        // GET: api/Accomodations/5
-        [ResponseType(typeof(Accomodation))]
-        public IHttpActionResult GetAccomodation(int id)
-        {
-            Accomodation accomodation = db.Accomodations.Find(id);
-            if (accomodation == null)
+            Accomodation accommodation = new Accomodation()
             {
-                return NotFound();
-            }
+                Name = entryAccommodation.Name,
+                Description = entryAccommodation.Description,
+                Address = entryAccommodation.Address,
+                Latitude = entryAccommodation.Latitude,
+                Longitude = entryAccommodation.Longitude,
+                AppUser_Id = owner.Id,
+                Place_Id = 6,// inicijalno 
+                AccommodationType_Id=1 // inicijalno 
 
-            return Ok(accomodation);
-        }
+            };
 
-        // PUT: api/Accomodations/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutAccomodation(int id, Accomodation accomodation)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //var owner = from user in db.AppUsers
+            //                           where user.FullName==entryAccommodation.Username
+            //                           select user;
+           /* var owner = db.AppUsers.FirstOrDefault<AppUser>(a => a.FullName == entryAccommodation.Username);
+           accommodation.AppUser = owner;*/
 
-            if (id != accomodation.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(accomodation).State = EntityState.Modified;
+            db.Accomodations.Add(accommodation);
 
             try
             {
-                db.SaveChanges();
+
+                await db.SaveChangesAsync();
+                return StatusCode(HttpStatusCode.OK);
+
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccomodationExists(id))
+                if (!AccommodationExists(accommodation.Id))
                 {
                     return NotFound();
                 }
                 else
                 {
+                    return StatusCode(HttpStatusCode.NoContent);
                     throw;
+
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Accomodations
-        [ResponseType(typeof(Accomodation))]
-        public IHttpActionResult PostAccomodation(Accomodation accomodation)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Accomodations.Add(accomodation);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = accomodation.Id }, accomodation);
-        }
-
-        // DELETE: api/Accomodations/5
-        [ResponseType(typeof(Accomodation))]
-        public IHttpActionResult DeleteAccomodation(int id)
-        {
-            Accomodation accomodation = db.Accomodations.Find(id);
-            if (accomodation == null)
-            {
-                return NotFound();
-            }
-
-            db.Accomodations.Remove(accomodation);
-            db.SaveChanges();
-
-            return Ok(accomodation);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool AccomodationExists(int id)
+        private bool AccommodationExists(int id)
         {
             return db.Accomodations.Count(e => e.Id == id) > 0;
         }
-        */
 
-
-
-        #endregion
-
-        [Route("AddAccomodation")]
-        public async Task<IHttpActionResult> AddAccomodation(AccomodationBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-           
-
-
-
-            return Ok();
-        }
 
     }
 }

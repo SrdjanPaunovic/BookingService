@@ -32,6 +32,8 @@ namespace BookingApp.BindingModels
 
         public string Username { get; set; } // po njemu trazimo vlasnika i setujemno ID
 
+        public string PlaceName { get; set; } 
+
 
     }
 }

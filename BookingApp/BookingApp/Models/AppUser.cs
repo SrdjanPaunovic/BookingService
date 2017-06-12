@@ -10,12 +10,11 @@ namespace BookingApp.Models
     public class AppUser
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         
         [MaxLength(100)]
-        public string FullName { get; set; }
+        public string UserName { get; set; }
 
         public bool IsForbidden { get; set; }
     }
