@@ -21,7 +21,9 @@ namespace BookingApp.Models
             this.Comments = new HashSet<Comment>();
             this.Rooms = new HashSet<Room>();
         }
-    
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [StringLength(30)]
         public string Name { get; set; }
@@ -29,8 +31,8 @@ namespace BookingApp.Models
         [StringLength(50)]
         public string Address { get; set; }
         public string AverageGrade { get; set; }
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public string ImageURL { get; set; }
         public string Approved { get; set; }
     
