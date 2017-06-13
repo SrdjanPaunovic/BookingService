@@ -35,7 +35,7 @@ namespace BookingApp.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string ImageURL { get; set; }
-        public string Approved { get; set; }
+        public bool Approved { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

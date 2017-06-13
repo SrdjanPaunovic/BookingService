@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
@@ -16,6 +17,7 @@ using Microsoft.Owin.Security.OAuth;
 using BookingApp.Models;
 using BookingApp.Providers;
 using BookingApp.Results;
+using System.Web.Http.Description;
 
 namespace BookingApp.Controllers
 {
@@ -377,9 +379,6 @@ namespace BookingApp.Controllers
             db.AppUsers.Add(appUser);
             db.SaveChanges();
 
-
-
-
             var user = new BAIdentityUser(appUser.Id, model.Username, model.Email);
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
@@ -392,6 +391,14 @@ namespace BookingApp.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("getId")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult GetUserId(string username)
+        {
+            var user = UserManager.FindByName("admin");
+            return Ok (user.Id);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

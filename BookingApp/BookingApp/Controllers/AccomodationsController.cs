@@ -1,21 +1,55 @@
-﻿ using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+#region usings
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BookingApp.Models;
-
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using System.Web.Http.ModelBinding;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using BookingApp.Models;
+using BookingApp.Providers;
+using BookingApp.Results;
+using System.Security.Principal;
+#endregion
 namespace BookingApp.Controllers
 {
+    [Authorize]
     [RoutePrefix("accommodation")]
     public class AccomodationsController : ApiController
     {
         private BAContext db = new BAContext();
+
+        private ApplicationUserManager _userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         // GET: api/Accomodations
         [HttpGet]
@@ -75,7 +109,6 @@ namespace BookingApp.Controllers
                     throw;
                 }
             }
-
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -89,6 +122,12 @@ namespace BookingApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            var username = User.Identity.GetUserName();
+            var user = UserManager.FindByName(username);
+            int userId = user.appUserId;
+            accomodation.Approved = false;
+            accomodation.AppUser_Id = userId;
 
             db.Accomodations.Add(accomodation);
             db.SaveChanges();
