@@ -12,17 +12,22 @@ using BookingApp.Models;
 
 namespace BookingApp.Controllers
 {
+    [RoutePrefix("country")]
     public class RoomsController : ApiController
     {
         private BAContext db = new BAContext();
 
         // GET: api/Rooms
+        [HttpGet]
+        [Route("rooms", Name = "RoomApi")]
         public IQueryable<Room> GetRooms()
         {
             return db.Rooms;
         }
 
         // GET: api/Rooms/5
+        [HttpGet]
+        [Route("rooms/{id}")]
         [ResponseType(typeof(Room))]
         public IHttpActionResult GetRoom(int id)
         {
@@ -36,6 +41,9 @@ namespace BookingApp.Controllers
         }
 
         // PUT: api/Rooms/5
+        [HttpPut]
+        [Route("room/{id}")]
+        [ResponseType(typeof(Country))]
         [ResponseType(typeof(void))]
         public IHttpActionResult PutRoom(int id, Room room)
         {
@@ -71,6 +79,8 @@ namespace BookingApp.Controllers
         }
 
         // POST: api/Rooms
+        [HttpPost]
+        [Route("country")]
         [ResponseType(typeof(Room))]
         public IHttpActionResult PostRoom(Room room)
         {
@@ -82,7 +92,7 @@ namespace BookingApp.Controllers
             db.Rooms.Add(room);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = room.Id }, room);
+            return CreatedAtRoute("RoomApi", new { id = room.Id }, room);
         }
 
         // DELETE: api/Rooms/5
