@@ -13,6 +13,7 @@ namespace BookingApp.Models
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using TypeLite;
     public partial class Accomodation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
