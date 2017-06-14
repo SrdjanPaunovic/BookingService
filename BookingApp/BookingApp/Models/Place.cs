@@ -24,6 +24,7 @@ namespace BookingApp.Models
     
         public int Id { get; set; }
         [StringLength(30)]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
 
         [ForeignKey("Region")]

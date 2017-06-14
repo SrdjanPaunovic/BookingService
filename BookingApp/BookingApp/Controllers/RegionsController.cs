@@ -53,6 +53,12 @@ namespace BookingApp.Controllers
                 return BadRequest();
             }
 
+            if (db.Regions.Any(x => (x.Name == region.Name) && (x.Id != region.Id)))
+            {
+
+                return BadRequest("Name must be unique");
+            }
+
             db.Entry(region).State = EntityState.Modified;
 
             try
@@ -82,7 +88,11 @@ namespace BookingApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (db.Regions.Any(x => (x.Name == region.Name)))
+            {
 
+                return BadRequest("Name must be unique");
+            }
             db.Regions.Add(region);
             db.SaveChanges();
 
