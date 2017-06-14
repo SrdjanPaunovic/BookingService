@@ -61,6 +61,9 @@ namespace BookingApp.Controllers
                 return BadRequest("Name must be unique");
             }
 
+            place.Region = null; //jer ce kreirati jos jednog jer nije ista instanca Region kao u bazi,
+                                 //dovoljno je sto ima id
+
             db.Entry(place).State = EntityState.Modified;
 
             try
@@ -97,6 +100,9 @@ namespace BookingApp.Controllers
 
                 return BadRequest("Name must be unique");
             }
+
+            place.Region = null; //jer ce kreirati jos jednog jer nije ista instanca Region kao u bazi,
+                                 //dovoljno je sto ima id
 
             db.Places.Add(place);
             await db.SaveChangesAsync();
