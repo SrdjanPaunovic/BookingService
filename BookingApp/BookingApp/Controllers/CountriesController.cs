@@ -55,6 +55,12 @@ namespace BookingApp.Controllers
                 return BadRequest();
             }
 
+            if (db.Countries.Any(x => (x.Name == country.Name) && (x.Id != country.Id)))
+            {
+                
+                return BadRequest("Name must be unique");
+            }
+
             db.Entry(country).State = EntityState.Modified;
 
             try
@@ -84,7 +90,10 @@ namespace BookingApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            if(db.Countries.Any(x => x.Name == country.Name))
+            {
+                return BadRequest("Name must be unique");
+            }
             db.Countries.Add(country);
             db.SaveChanges();
             var v = CreatedAtRoute("CountryApi", new { id = country.Id }, country);

@@ -12,6 +12,7 @@ namespace BookingApp.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     public partial class Country
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,7 +22,8 @@ namespace BookingApp.Models
         }
     
         public int Id { get; set; }
-        [StringLength(30)]
+        [StringLength(30),Required]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
         [StringLength(10)]
         public string Code { get; set; }

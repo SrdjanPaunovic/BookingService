@@ -75,6 +75,7 @@ namespace BookingApp.Controllers
         }
 
         // POST api/Account/Logout
+        [HttpPost]
         [Route("Logout")]
         public IHttpActionResult Logout()
         {
@@ -378,10 +379,14 @@ namespace BookingApp.Controllers
 
             db.AppUsers.Add(appUser);
             db.SaveChanges();
-
+            
             var user = new BAIdentityUser(appUser.Id, model.Username, model.Email);
 
+            
+            user.PasswordHash = BAIdentityUser.HashPassword(model.Password);
+
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            UserManager.AddToRole(user.Id, "AppUser");
             //TODO addToRoleAsync
             if (!result.Succeeded)
             {

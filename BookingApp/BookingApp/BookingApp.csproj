@@ -304,6 +304,10 @@
     <Compile Include="Migrations\201706140044251_mgr-v5.Designer.cs">
       <DependentUpon>201706140044251_mgr-v5.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706140943275_mgr-v6.cs" />
+    <Compile Include="Migrations\201706140943275_mgr-v6.Designer.cs">
+      <DependentUpon>201706140943275_mgr-v6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccommodationType.cs" />
     <Compile Include="Models\Accomodation.cs" />
@@ -421,6 +425,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706140044251_mgr-v5.resx">
       <DependentUpon>201706140044251_mgr-v5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706140943275_mgr-v6.resx">
+      <DependentUpon>201706140943275_mgr-v6.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
