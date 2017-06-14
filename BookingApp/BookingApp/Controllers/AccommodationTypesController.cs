@@ -12,6 +12,7 @@ using BookingApp.Models;
 
 namespace BookingApp.Controllers
 {
+    [Authorize]
     [RoutePrefix("type")]
     public class AccommodationTypesController : ApiController
     {

@@ -12,7 +12,8 @@ using BookingApp.Models;
 
 namespace BookingApp.Controllers
 {
-    [RoutePrefix("country")]
+    [Authorize]
+    [RoutePrefix("room")]
     public class RoomsController : ApiController
     {
         private BAContext db = new BAContext();
