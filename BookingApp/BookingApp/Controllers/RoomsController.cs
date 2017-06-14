@@ -81,7 +81,7 @@ namespace BookingApp.Controllers
 
         // POST: api/Rooms
         [HttpPost]
-        [Route("country")]
+        [Route("room")]
         [ResponseType(typeof(Room))]
         public IHttpActionResult PostRoom(Room room)
         {
@@ -97,6 +97,8 @@ namespace BookingApp.Controllers
         }
 
         // DELETE: api/Rooms/5
+        [HttpDelete]
+        [Route("room/{id}")]
         [ResponseType(typeof(Room))]
         public IHttpActionResult DeleteRoom(int id)
         {
