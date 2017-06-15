@@ -63,7 +63,6 @@ namespace BookingApp.Controllers
         [HttpGet]
         [Route("accomodations/{id}")]
         [ResponseType(typeof(Accomodation))]
-        [ResponseType(typeof(Accomodation))]
         public IHttpActionResult GetAccomodation(int id)
         {
             Accomodation accomodation = db.Accomodations.Find(id);
