@@ -29,7 +29,6 @@ namespace BookingApp.Controllers
         // GET: api/AccommodationTypes/5
         [HttpGet]
         [Route("type/{id}")]
-        [ResponseType(typeof(Accomodation))]
         [ResponseType(typeof(AccommodationType))]
         public IHttpActionResult GetAccommodationType(int id)
         {
@@ -41,8 +40,7 @@ namespace BookingApp.Controllers
 
             return Ok(accommodationType);
         }
-
-        // PUT: api/AccommodationTypes/5
+        /*
         [ResponseType(typeof(void))]
         public IHttpActionResult PutAccommodationType(int id, AccommodationType accommodationType)
         {
@@ -75,7 +73,7 @@ namespace BookingApp.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 
         // POST: api/AccommodationTypes
         [HttpPost]
@@ -88,14 +86,17 @@ namespace BookingApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (db.AccommodationTypes.Any(x => x.Name == accommodationType.Name))
+            {
+                return BadRequest("Name must be unique");
+            }
+
             db.AccommodationTypes.Add(accommodationType);
             db.SaveChanges();
 
             return CreatedAtRoute("TypeApi", new { id = accommodationType.Id }, accommodationType);
         }
 
-        // DELETE: api/AccommodationTypes/5
-        [ResponseType(typeof(AccommodationType))]
         [HttpDelete]
         [Route("type/{id}")]
         public IHttpActionResult DeleteAccommodationType(int id)

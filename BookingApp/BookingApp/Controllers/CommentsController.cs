@@ -12,14 +12,17 @@ using BookingApp.Models;
 
 namespace BookingApp.Controllers
 {
+
+    [RoutePrefix("comment")]
     public class CommentsController : ApiController
     {
         private BAContext db = new BAContext();
 
-        // GET: api/Comments
-        public IQueryable<Comment> GetComments()
+        [HttpGet]
+        [Route("comment/acc/{id}")]
+        public IQueryable<Comment> GetCommentForAccomodation(int id)
         {
-            return db.Comments;
+            return db.Comments.Where(x=>x.Accomodation_Id == id);
         }
 
         // GET: api/Comments/5
