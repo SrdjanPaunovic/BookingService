@@ -26,6 +26,14 @@ namespace BookingApp.Controllers
             return db.Rooms;
         }
 
+
+        [HttpGet]
+        [Route("customrooms/{Id}")]
+        public IQueryable<Room> GetCustomRooms(int Id)
+        {
+            return db.Rooms.Where(room => room.Accomodation_Id == Id);
+        }
+
         // GET: api/Rooms/5
         [HttpGet]
         [Route("rooms/{id}")]
