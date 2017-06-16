@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BookingApp.Models;
+using BookingApp.BindingModels;
 
 namespace BookingApp.Controllers
 {
@@ -18,12 +19,21 @@ namespace BookingApp.Controllers
     {
         private BAContext db = new BAContext();
 
+
+        [HttpGet]
+        [Route("comments", Name = "CommentApi")]
+        public IQueryable<Comment> GetComments()
+        {
+            return db.Comments;
+        }
+
         [HttpGet]
         [Route("comment/acc/{id}")]
         public IQueryable<Comment> GetCommentForAccomodation(int id)
         {
             return db.Comments.Where(x=>x.Accomodation_Id == id);
         }
+             
 
         // GET: api/Comments/5
         [ResponseType(typeof(Comment))]
@@ -73,19 +83,28 @@ namespace BookingApp.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Comments
-        [ResponseType(typeof(Comment))]
-        public IHttpActionResult PostComment(Comment comment)
+        [HttpPost]
+        [Route("comment")]
+        public IHttpActionResult PostComment(CommentBindingModel bindingModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            AppUser appUser = db.AppUsers.FirstOrDefault(x => x.UserName == bindingModel.Username);
+            Comment comment = new Comment()
+            {
+                AppUser_Id = appUser.Id,
+                Text = bindingModel.Text,
+                Rate = bindingModel.Rate,
+                Accomodation_Id = bindingModel.Accomodation_Id
+            };
+            
+
             db.Comments.Add(comment);
             db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = comment.Id }, comment);
+            return CreatedAtRoute("CommentApi", new { id = comment.Id }, comment);
         }
 
         // DELETE: api/Comments/5
