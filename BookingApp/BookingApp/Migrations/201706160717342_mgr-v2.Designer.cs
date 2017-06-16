@@ -7,13 +7,13 @@ namespace BookingApp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class mgrv5 : IMigrationMetadata
+    public sealed partial class mgrv2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(mgrv5));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(mgrv2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201706140044251_mgr-v5"; }
+            get { return "201706160717342_mgr-v2"; }
         }
         
         string IMigrationMetadata.Source

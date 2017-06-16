@@ -74,11 +74,27 @@
       <HintPath>..\packages\Microsoft.ApplicationInsights.1.2.3\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.3.1.0\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin.Security.Jwt, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Jwt.3.0.0\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
       <Private>True</Private>
@@ -100,10 +116,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -198,9 +210,6 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
@@ -265,6 +274,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="BindingModels\AccomodationBindingModel.cs" />
+    <Compile Include="BindingModels\CommentBindingModel.cs" />
     <Compile Include="Controllers\AccommodationTypesController.cs" />
     <Compile Include="Controllers\AccomodationsController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -280,6 +290,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="Migrations\201706040304228_Initial.cs" />
     <Compile Include="Migrations\201706040304228_Initial.Designer.cs">
       <DependentUpon>201706040304228_Initial.cs</DependentUpon>
@@ -288,25 +299,9 @@
     <Compile Include="Migrations\201706061101153_mgr-v1.Designer.cs">
       <DependentUpon>201706061101153_mgr-v1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706110942281_mgr-v2.cs" />
-    <Compile Include="Migrations\201706110942281_mgr-v2.Designer.cs">
-      <DependentUpon>201706110942281_mgr-v2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706120924495_mgr-v3.cs" />
-    <Compile Include="Migrations\201706120924495_mgr-v3.Designer.cs">
-      <DependentUpon>201706120924495_mgr-v3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706120929519_mgr-v4.cs" />
-    <Compile Include="Migrations\201706120929519_mgr-v4.Designer.cs">
-      <DependentUpon>201706120929519_mgr-v4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706140044251_mgr-v5.cs" />
-    <Compile Include="Migrations\201706140044251_mgr-v5.Designer.cs">
-      <DependentUpon>201706140044251_mgr-v5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706140943275_mgr-v6.cs" />
-    <Compile Include="Migrations\201706140943275_mgr-v6.Designer.cs">
-      <DependentUpon>201706140943275_mgr-v6.cs</DependentUpon>
+    <Compile Include="Migrations\201706160717342_mgr-v2.cs" />
+    <Compile Include="Migrations\201706160717342_mgr-v2.Designer.cs">
+      <DependentUpon>201706160717342_mgr-v2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201706160950281_zeki-mgr.cs" />
     <Compile Include="Migrations\201706160950281_zeki-mgr.Designer.cs">
@@ -372,6 +367,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -418,20 +415,8 @@
     <EmbeddedResource Include="Migrations\201706061101153_mgr-v1.resx">
       <DependentUpon>201706061101153_mgr-v1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706110942281_mgr-v2.resx">
-      <DependentUpon>201706110942281_mgr-v2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706120924495_mgr-v3.resx">
-      <DependentUpon>201706120924495_mgr-v3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706120929519_mgr-v4.resx">
-      <DependentUpon>201706120929519_mgr-v4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706140044251_mgr-v5.resx">
-      <DependentUpon>201706140044251_mgr-v5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706140943275_mgr-v6.resx">
-      <DependentUpon>201706140943275_mgr-v6.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201706160717342_mgr-v2.resx">
+      <DependentUpon>201706160717342_mgr-v2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706160950281_zeki-mgr.resx">
       <DependentUpon>201706160950281_zeki-mgr.cs</DependentUpon>
@@ -442,6 +427,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Models\file1.ts" />
     <TypeScriptCompile Include="Scripts\TypeLite.Net4.d.ts">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
