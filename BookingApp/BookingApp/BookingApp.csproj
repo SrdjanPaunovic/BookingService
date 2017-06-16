@@ -299,13 +299,9 @@
     <Compile Include="Migrations\201706061101153_mgr-v1.Designer.cs">
       <DependentUpon>201706061101153_mgr-v1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706160717342_mgr-v2.cs" />
-    <Compile Include="Migrations\201706160717342_mgr-v2.Designer.cs">
-      <DependentUpon>201706160717342_mgr-v2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706160950281_zeki-mgr.cs" />
-    <Compile Include="Migrations\201706160950281_zeki-mgr.Designer.cs">
-      <DependentUpon>201706160950281_zeki-mgr.cs</DependentUpon>
+    <Compile Include="Migrations\201706161150259_mgr-v2.cs" />
+    <Compile Include="Migrations\201706161150259_mgr-v2.Designer.cs">
+      <DependentUpon>201706161150259_mgr-v2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccommodationType.cs" />
@@ -415,11 +411,8 @@
     <EmbeddedResource Include="Migrations\201706061101153_mgr-v1.resx">
       <DependentUpon>201706061101153_mgr-v1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706160717342_mgr-v2.resx">
-      <DependentUpon>201706160717342_mgr-v2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706160950281_zeki-mgr.resx">
-      <DependentUpon>201706160950281_zeki-mgr.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201706161150259_mgr-v2.resx">
+      <DependentUpon>201706161150259_mgr-v2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

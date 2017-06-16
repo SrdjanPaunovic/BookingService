@@ -19,12 +19,12 @@ namespace BookingApp.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public System.DateTime StartDate { get; set; }
+        public System.DateTime? StartTime { get; set; }
 
 
-        public System.DateTime EndTime { get; set; }
+        public System.DateTime? EndTime { get; set; }
 
-        public System.DateTime Timestamp { get; set; }
+        public System.DateTime? Timestamp { get; set; }
 
         [ForeignKey("Room")]
         public int Room_Id { get; set; }

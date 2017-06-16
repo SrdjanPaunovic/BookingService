@@ -180,7 +180,7 @@ namespace BookingApp.Controllers
 
         public bool validateReservation(RoomReseravtion roomReservation)
         {
-            if (roomReservation.StartDate > roomReservation.EndTime)
+            if (roomReservation.StartTime > roomReservation.EndTime)
                 return false;
             List<RoomReseravtion> reservationList = db.RoomReseravtions
                 .Where(reservation =>reservation.Room_Id == roomReservation.Room_Id)
@@ -198,18 +198,18 @@ namespace BookingApp.Controllers
 
         public bool Intersects(RoomReseravtion reservation1,RoomReseravtion reservation2)
         {
-            if (reservation1.StartDate > reservation1.EndTime || reservation2.StartDate > reservation2.EndTime)
+            if (reservation1.StartTime > reservation1.EndTime || reservation2.StartTime > reservation2.EndTime)
                 return false;
 
-            if (reservation1.StartDate == reservation1.EndTime || reservation2.StartDate == reservation2.EndTime)
+            if (reservation1.StartTime == reservation1.EndTime || reservation2.StartTime == reservation2.EndTime)
                 return false; // No actual date range
 
-            if (reservation1.StartDate == reservation2.StartDate || reservation1.EndTime == reservation2.EndTime)
+            if (reservation1.StartTime == reservation2.StartTime || reservation1.EndTime == reservation2.EndTime)
                 return true; // If any set is the same time, then by default there must be some overlap. 
 
-            if (reservation1.StartDate < reservation2.StartDate)
+            if (reservation1.StartTime < reservation2.StartTime)
             {
-                if (reservation1.EndTime > reservation2.StartDate && reservation1.EndTime < reservation2.EndTime)
+                if (reservation1.EndTime > reservation2.StartTime && reservation1.EndTime < reservation2.EndTime)
                     return true; // Condition 1
 
                 if (reservation1.EndTime > reservation2.EndTime)
@@ -217,7 +217,7 @@ namespace BookingApp.Controllers
             }
             else
             {
-                if (reservation2.EndTime > reservation1.StartDate && reservation2.EndTime < reservation1.EndTime)
+                if (reservation2.EndTime > reservation1.StartTime && reservation2.EndTime < reservation1.EndTime)
                     return true; // Condition 2
 
                 if (reservation2.EndTime > reservation1.EndTime)
