@@ -308,6 +308,10 @@
     <Compile Include="Migrations\201706140943275_mgr-v6.Designer.cs">
       <DependentUpon>201706140943275_mgr-v6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706160950281_zeki-mgr.cs" />
+    <Compile Include="Migrations\201706160950281_zeki-mgr.Designer.cs">
+      <DependentUpon>201706160950281_zeki-mgr.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccommodationType.cs" />
     <Compile Include="Models\Accomodation.cs" />
@@ -428,6 +432,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706140943275_mgr-v6.resx">
       <DependentUpon>201706140943275_mgr-v6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706160950281_zeki-mgr.resx">
+      <DependentUpon>201706160950281_zeki-mgr.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
