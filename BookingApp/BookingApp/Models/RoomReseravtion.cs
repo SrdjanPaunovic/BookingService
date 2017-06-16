@@ -15,6 +15,10 @@ namespace BookingApp.Models
     using System.ComponentModel.DataAnnotations.Schema;
     public partial class RoomReseravtion
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         public System.DateTime StartDate { get; set; }
 
 
@@ -23,14 +27,10 @@ namespace BookingApp.Models
         public System.DateTime Timestamp { get; set; }
 
         [ForeignKey("Room")]
-        [Key]
-        [Column(Order =1)]
         public int Room_Id { get; set; }
         public virtual Room Room { get; set; }
 
         [ForeignKey("AppUser")]
-        [Key]
-        [Column(Order = 2)]
         public int AppUser_Id { get; set; }
         public virtual AppUser AppUser { get; set; }
     }
