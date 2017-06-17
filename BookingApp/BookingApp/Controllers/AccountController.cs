@@ -76,6 +76,7 @@ namespace BookingApp.Controllers
 
         // POST api/Account/Logout
         [HttpPost]
+        [AllowAnonymous]
         [Route("Logout")]
         public IHttpActionResult Logout()
         {
