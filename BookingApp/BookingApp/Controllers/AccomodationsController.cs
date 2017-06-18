@@ -43,6 +43,8 @@ namespace BookingApp.Controllers
 
         private ApplicationUserManager _userManager;
 
+        public const string ServerLocalHost = "http://localhost:54042";
+
         public ApplicationUserManager UserManager
         {
             get
@@ -182,11 +184,13 @@ namespace BookingApp.Controllers
 
                             var myUniqueFileName = Guid.NewGuid().ToString().Substring(0,8);
                             var filePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + myUniqueFileName + extension);
+                            var relativePath = ServerLocalHost + "/Content/Images/" + myUniqueFileName + extension;
+
                             Accomodation acc = this.db.Accomodations.FirstOrDefault(x => x.Id == id);
 
                             if (acc != null)
                             {
-                                acc.ImageURLs += "#" + filePath;
+                                acc.ImageURLs += "#" + relativePath;
                                 db.Entry(acc).State = EntityState.Modified;
                                 this.db.SaveChanges();
                                 postedFile.SaveAs(filePath);
@@ -215,13 +219,19 @@ namespace BookingApp.Controllers
         {
 
             Accomodation acc = this.db.Accomodations.FirstOrDefault(x => x.Id == id);
+            if (acc.ImageURLs == null)
+            {
+                return null;
+            }
             var filePaths = acc.ImageURLs.Split('#');
 
             List<string> retList = new List<string>();
 
             foreach (var filePath in filePaths)
             {
-                if (File.Exists(filePath))
+                
+                var  fullfilePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + Path.GetFileName(filePath));
+                if (File.Exists(fullfilePath))
                 {
                     retList.Add(filePath);
                 }
