@@ -386,7 +386,7 @@ namespace BookingApp.Controllers
             user.PasswordHash = BAIdentityUser.HashPassword(model.Password);
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-            UserManager.AddToRole(user.Id, "AppUser");
+            UserManager.AddToRole(user.Id, model.Role);
             //TODO addToRoleAsync
             if (!result.Succeeded)
             {

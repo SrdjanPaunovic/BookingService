@@ -36,7 +36,7 @@ namespace BookingApp.Models
         public double AverageGrade { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public string ImageURL { get; set; }
+        public string ImageURLs { get; set; }
         public bool Approved { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

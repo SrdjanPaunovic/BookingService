@@ -282,6 +282,7 @@
     <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\PlacesController.cs" />
     <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\RoomReseravtionsController.cs" />
@@ -302,6 +303,10 @@
     <Compile Include="Migrations\201706161150259_mgr-v2.cs" />
     <Compile Include="Migrations\201706161150259_mgr-v2.Designer.cs">
       <DependentUpon>201706161150259_mgr-v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706161933048_mg4.cs" />
+    <Compile Include="Migrations\201706161933048_mg4.Designer.cs">
+      <DependentUpon>201706161933048_mg4.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccommodationType.cs" />
@@ -376,7 +381,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TypeLite.Net4.d.ts</LastGenOutput>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -395,6 +402,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -413,6 +421,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706161150259_mgr-v2.resx">
       <DependentUpon>201706161150259_mgr-v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706161933048_mg4.resx">
+      <DependentUpon>201706161933048_mg4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
