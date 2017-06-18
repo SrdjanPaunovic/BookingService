@@ -31,6 +31,10 @@ using System.Security.Principal;
 #endregion
 namespace BookingApp.Controllers
 {
+    using System.IO;
+    using System.Net.Http.Headers;
+    using System.Web;
+
     [Authorize]
     [RoutePrefix("accommodation")]
     public class AccomodationsController : ApiController
@@ -77,8 +81,6 @@ namespace BookingApp.Controllers
         // PUT: api/Accomodations/5
         [HttpPut]
         [Route("accommodation/{id}")]
-        [ResponseType(typeof(Country))]
-        [ResponseType(typeof(void))]
         public IHttpActionResult PutAccomodation(int id, Accomodation accomodation)
         {
             if (!ModelState.IsValid)
@@ -132,6 +134,108 @@ namespace BookingApp.Controllers
             db.SaveChanges();
 
             return CreatedAtRoute("AccommodationApi", new { id = accomodation.Id }, accomodation);
+        }
+
+        [HttpPost]
+        [Route("image/upload/{id}")]
+        [AllowAnonymous]
+        public async Task<HttpResponseMessage> PostUserImage(int id)
+        {
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            try
+            {
+
+                var httpRequest = HttpContext.Current.Request;
+
+                foreach (string file in httpRequest.Files)
+                {
+                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
+
+                    var postedFile = httpRequest.Files[file];
+                    if (postedFile != null && postedFile.ContentLength > 0)
+                    {
+
+                        int MaxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+
+                        IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png" };
+                        var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
+                        var extension = ext.ToLower();
+                        if (!AllowedFileExtensions.Contains(extension))
+                        {
+
+                            var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
+
+                            dict.Add("error", message);
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+                        }
+                        else if (postedFile.ContentLength > MaxContentLength)
+                        {
+
+                            var message = string.Format("Please Upload a file upto 1 mb.");
+
+                            dict.Add("error", message);
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+                        }
+                        else
+                        {
+
+
+                            var myUniqueFileName = Guid.NewGuid().ToString().Substring(0,8);
+                            var filePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + myUniqueFileName + extension);
+                            Accomodation acc = this.db.Accomodations.FirstOrDefault(x => x.Id == id);
+
+                            if (acc != null)
+                            {
+                                acc.ImageURLs += "#" + filePath;
+                                db.Entry(acc).State = EntityState.Modified;
+                                this.db.SaveChanges();
+                                postedFile.SaveAs(filePath);
+                            }
+
+                        }
+                    }
+                    var message1 = string.Format("Image Updated Successfully.");
+                    return Request.CreateErrorResponse(HttpStatusCode.Created, message1); ;
+                }
+                var res = string.Format("Please Upload a image.");
+                dict.Add("error", res);
+                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+            }
+            catch (Exception ex)
+            {
+                var res = string.Format("some Message");
+                dict.Add("error", res);
+                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+            }
+        }
+
+        [HttpGet]
+        [Route("images/{id}")]
+        public ICollection<string> GetImages(int id)
+        {
+
+            Accomodation acc = this.db.Accomodations.FirstOrDefault(x => x.Id == id);
+            var filePaths = acc.ImageURLs.Split('#');
+
+            List<string> retList = new List<string>();
+
+            foreach (var filePath in filePaths)
+            {
+                if (File.Exists(filePath))
+                {
+                    retList.Add(filePath);
+                }
+            }
+
+            return retList;
+            
+            /*//S2:Read File as Byte Array
+            byte[] fileData = File.ReadAllBytes(filePath);
+
+            if (fileData == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            //S3:Set Response contents and MediaTypeHeaderValue
+            */
         }
 
         // DELETE: api/Accomodations/5

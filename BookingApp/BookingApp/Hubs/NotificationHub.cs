@@ -8,44 +8,52 @@ using System.Web;
 
 namespace BookingApp.Hubs
 {
+    using System.Threading.Tasks;
+
+    using BookingApp.Models;
+
     [HubName("notifications")]
     public class NotificationHub : Hub
     {
         private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-        private static Timer t = new Timer();
+
+        private static Dictionary<string, string> subscribed = new Dictionary<string, string>();
+
+        private BAContext db = new BAContext();
+
+
+        public void Subscribe(string username, string role)
+        {
+            subscribed.Add(Context.ConnectionId, username);
+            Groups.Add(Context.ConnectionId, role);
+        }
+
+        public void Completed()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                this.CheckAccomodations();
+            }
+        }
+
+        public void CheckAccomodations()
+        {
+            var accList = this.db.Accomodations.Where(x => x.Approved == false).ToList();
+
+            Clients.Client(Context.ConnectionId).checkAccomodations(accList);
+        }
 
         public void Hello()
         {
-            Clients.All.hello("Hello from server");
+            Clients.Client(Context.ConnectionId).hello("Hello from client");
+            Clients.All.hello("Hello from ALL");
+            hubContext.Clients.Group("Admin").hello("Hello from Admin");
         }
 
         public static void Notify(int clickCount)
         {
             hubContext.Clients.Group("Admins").clickNotification($"Clicks: {clickCount}");
         }
-
-        public void GetTime()
-        {
-            Clients.All.setRealTime(DateTime.Now.ToString("h:mm:ss tt"));
-        }
-
-        public void TimeServerUpdates()
-        {
-            t.Interval = 1000;
-            t.Start();
-            t.Elapsed += OnTimedEvent;
-        }
-
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            GetTime();
-        }
-
-        public void StopTimeServerUpdates()
-        {
-            t.Stop();
-        }
-
 
     }
 }
