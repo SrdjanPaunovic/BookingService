@@ -35,6 +35,8 @@ namespace BookingApp.Controllers
     using System.Net.Http.Headers;
     using System.Web;
 
+    using BookingApp.Hubs;
+
     [Authorize]
     [RoutePrefix("accommodation")]
     public class AccomodationsController : ApiController
@@ -80,6 +82,23 @@ namespace BookingApp.Controllers
             return Ok(accomodation);
         }
 
+        // GET: api/Accomodations/5
+        [HttpGet]
+        [Route("acc_for_user/{username}")]
+        [ResponseType(typeof(Accomodation))]
+        public IHttpActionResult GetAccomodationForUser(string username)
+        {
+
+            List<Accomodation> accomodations = db.Accomodations.Where(x=>x.AppUser.UserName == username).ToList();
+
+            if (accomodations == null)
+            {
+                return NotFound();
+            }
+
+            return this.Ok(accomodations);
+        }
+
         // PUT: api/Accomodations/5
         [HttpPut]
         [Route("accommodation/{id}")]
@@ -100,6 +119,42 @@ namespace BookingApp.Controllers
             try
             {
                 db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AccomodationExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [HttpPut]
+        [Route("approve/{id}")]
+        [AllowAnonymous]
+        public IHttpActionResult ApproveAccomodation(int id)
+        {
+
+            var accomodation = db.Accomodations.FirstOrDefault(x => x.Id == id);
+
+            if (accomodation == null)
+            {
+                return this.NotFound();
+            }
+
+            accomodation.Approved = true;
+
+            db.Entry(accomodation).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+                NotificationHub.UpdateList(this.db.Accomodations.Where(x => x.Approved == false).ToList());
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -180,8 +235,6 @@ namespace BookingApp.Controllers
                         }
                         else
                         {
-
-
                             var myUniqueFileName = Guid.NewGuid().ToString().Substring(0,8);
                             var filePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + myUniqueFileName + extension);
                             var relativePath = ServerLocalHost + "/Content/Images/" + myUniqueFileName + extension;

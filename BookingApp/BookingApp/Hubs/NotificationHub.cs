@@ -8,9 +8,13 @@ using System.Web;
 
 namespace BookingApp.Hubs
 {
+    using System.Net;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using BookingApp.Models;
+
+    using Microsoft.Ajax.Utilities;
 
     [HubName("notifications")]
     public class NotificationHub : Hub
@@ -18,29 +22,74 @@ namespace BookingApp.Hubs
         private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
         private static Dictionary<string, string> subscribed = new Dictionary<string, string>();
-
+        private static List<Accomodation> needToApprove = new List<Accomodation>();
+        private static List<Accomodation> ApprovedList = new List<Accomodation>();
         private BAContext db = new BAContext();
 
+        private Thread thread;
 
-        public void Subscribe(string username, string role)
+        public NotificationHub()
         {
-            subscribed.Add(Context.ConnectionId, username);
-            Groups.Add(Context.ConnectionId, role);
+            needToApprove = this.db.Accomodations.Where(x => x.Approved == false).ToList();
         }
 
-        public void Completed()
+        public static void UpdateList(List<Accomodation> list )
         {
-            for (int i = 0; i < 10; i++)
+            needToApprove = list;
+        }
+        public void Subscribe(string username, string role)
+        {
+            if (subscribed.Count == 0)
             {
+                subscribed.Add(Context.ConnectionId, username);
+                Groups.Add(Context.ConnectionId, role);
+                this.thread = new Thread(ThreadLoop);
+                this.thread.Start();
+            }
+            else
+            {
+                subscribed.Add(Context.ConnectionId, username);
+                Groups.Add(Context.ConnectionId, role);
+            }
+        }
+
+        private void ThreadLoop()
+        {
+            while (true)
+            {
+                Thread.Sleep(1000);
                 this.CheckAccomodations();
             }
         }
 
         public void CheckAccomodations()
         {
-            var accList = this.db.Accomodations.Where(x => x.Approved == false).ToList();
 
-            Clients.Client(Context.ConnectionId).checkAccomodations(accList);
+            if (needToApprove.Count > 0)
+            {
+                var accList = needToApprove.Where(x => x.Approved == false);
+                Clients.Group("Admin").checkForApproveAcc(accList);
+            //    Clients.Client(Context.ConnectionId).checkAccomodations(accList);
+            }
+
+            if (ApprovedList.Count > 0)
+            {
+                var accList = ApprovedList.Where(x => x.Approved);
+
+                foreach (var acc in accList)
+                {
+                    AppUser user = this.db.AppUsers.FirstOrDefault(x => x.Id == acc.AppUser_Id);
+                    if (user != null)
+                    {
+                        if (subscribed.ContainsValue(user.UserName))
+                        {
+                            Clients.Client(subscribed.FirstOrDefault(x => x.Value == user.UserName).Key).getApprovedAcc(acc);
+                            ApprovedList.Remove(acc);
+                        }
+                    }
+                    
+                }
+            }
         }
 
         public void Hello()
@@ -55,5 +104,12 @@ namespace BookingApp.Hubs
             hubContext.Clients.Group("Admins").clickNotification($"Clicks: {clickCount}");
         }
 
+       
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            subscribed.Remove(Context.ConnectionId);
+
+            return base.OnDisconnected(stopCalled);
+        }
     }
 }
