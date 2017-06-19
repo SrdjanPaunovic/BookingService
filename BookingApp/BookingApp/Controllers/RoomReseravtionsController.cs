@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using BookingApp.Models;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
+using BookingApp.ViewModels;
 
 namespace BookingApp.Controllers
 {
@@ -44,6 +45,108 @@ namespace BookingApp.Controllers
             return db.RoomReseravtions;
         }
 
+        [HttpGet]
+        [Route("m_reservations/{managerId}")]
+        public IQueryable<ReservationViewModel> GetManagerRoomReseravtions(int managerId)
+        {
+            //return db.RoomReseravtions.Include("Room.Accomodation").Include("AppUser").Where(user => user.Id == id);
+
+            return from a in db.RoomReseravtions
+                   join b in db.Rooms on a.Room_Id equals b.Id
+                   join c in db.Accomodations on b.Accomodation_Id equals c.Id
+                   join d in db.AppUsers on c.AppUser_Id equals d.Id
+                   where d.Id == managerId
+                   select new ReservationViewModel
+                   {
+                       Id = a.Id,
+                       StartTime = a.StartTime,
+                       EndTime = a.EndTime,
+                       AccommodationName = c.Name,
+                       RoomNumber = b.RoomNumber
+                   };
+
+
+                   /*
+                   join c on DbContext.Set<Accomodation>() b.ID equals c.TableBID
+                   join c on DbContext.Set<AppUser>() b.ID equals c.TableBID
+
+                   select selector;*/
+        }
+        [HttpGet]
+        [Route("u_reservations/{id}")]
+        public IQueryable<RoomReseravtion> GetUserRoomReseravtions(int id)
+        {
+            return db.RoomReseravtions.Where(res => res.AppUser_Id == id);
+        }
+
+        [HttpGet]
+        [Route("reservation_preview")]
+        public IQueryable<ReservationViewModel> GetAdminRoomReseravtions()
+        {
+            var username = User.Identity.GetUserName();
+            var user = UserManager.FindByName(username);
+            var userRole = user.Roles.FirstOrDefault();
+            var role = db.Roles.SingleOrDefault(r => r.Id == userRole.RoleId);
+            int appUserId = user.appUserId;
+
+            if (role.Name.Equals("Manager"))
+            {
+                return from a in db.RoomReseravtions
+                       join b in db.Rooms on a.Room_Id equals b.Id
+                       join c in db.Accomodations on b.Accomodation_Id equals c.Id
+                       join d in db.AppUsers on c.AppUser_Id equals d.Id
+                       where d.Id == appUserId
+                       select new ReservationViewModel
+                       {
+                           Id = a.Id,
+                           StartTime = a.StartTime,
+                           EndTime = a.EndTime,
+                           AccommodationName = c.Name,
+                           RoomNumber = b.RoomNumber
+                       };
+            }
+            else if (role.Name.Equals("Admin"))
+            {
+                return from a in db.RoomReseravtions
+                       join b in db.Rooms on a.Room_Id equals b.Id
+                       join c in db.Accomodations on b.Accomodation_Id equals c.Id
+                       join d in db.AppUsers on c.AppUser_Id equals d.Id
+                       where d.Id == d.Id
+                       select new ReservationViewModel
+                       {
+                           Id = a.Id,
+                           StartTime = a.StartTime,
+                           EndTime = a.EndTime,
+                           AccommodationName = c.Name,
+                           RoomNumber = b.RoomNumber
+                       };
+
+
+            }
+            else
+            {
+
+                return from a in db.RoomReseravtions
+                       join b in db.Rooms on a.Room_Id equals b.Id
+                       join c in db.Accomodations on b.Accomodation_Id equals c.Id
+                       join d in db.AppUsers on c.AppUser_Id equals d.Id
+                       where a.AppUser_Id == appUserId
+                       select new ReservationViewModel
+                       {
+                           Id = a.Id,
+                           StartTime = a.StartTime,
+                           EndTime = a.EndTime,
+                           AccommodationName = c.Name,
+                           RoomNumber = b.RoomNumber
+                       };
+
+            }
+           
+
+        }
+
+
+        #region Methods
         // GET: api/RoomReseravtions/5
         [ResponseType(typeof(RoomReseravtion))]
         public IHttpActionResult GetRoomReseravtion(int id)
@@ -226,6 +329,7 @@ namespace BookingApp.Controllers
 
             return false;
         }
+        #endregion
 
     }
 }
