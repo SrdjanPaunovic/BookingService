@@ -100,10 +100,25 @@ namespace BookingApp.Controllers
                 Rate = bindingModel.Rate,
                 Accomodation_Id = bindingModel.Accomodation_Id
             };
-            
 
+            Accomodation acc = this.db.Accomodations.FirstOrDefault(x => x.Id == bindingModel.Accomodation_Id);
+            
             db.Comments.Add(comment);
             db.SaveChanges();
+
+            if (acc != null)
+            {
+                var commList = this.db.Comments.Where(x => x.Accomodation_Id == acc.Id);
+                double sum = 0;
+                foreach (var com in commList)
+                {
+                    sum += com.Rate;
+                }
+
+                acc.AverageGrade = sum / commList.Count();
+                this.db.Entry(acc).State = EntityState.Modified;
+                this.db.SaveChanges();
+            }
             return CreatedAtRoute("CommentApi", new { id = comment.Id }, comment);
         }
 
