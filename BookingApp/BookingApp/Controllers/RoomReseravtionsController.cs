@@ -45,39 +45,7 @@ namespace BookingApp.Controllers
             return db.RoomReseravtions;
         }
 
-        [HttpGet]
-        [Route("m_reservations/{managerId}")]
-        public IQueryable<ReservationViewModel> GetManagerRoomReseravtions(int managerId)
-        {
-            //return db.RoomReseravtions.Include("Room.Accomodation").Include("AppUser").Where(user => user.Id == id);
-
-            return from a in db.RoomReseravtions
-                   join b in db.Rooms on a.Room_Id equals b.Id
-                   join c in db.Accomodations on b.Accomodation_Id equals c.Id
-                   join d in db.AppUsers on c.AppUser_Id equals d.Id
-                   where d.Id == managerId
-                   select new ReservationViewModel
-                   {
-                       Id = a.Id,
-                       StartTime = a.StartTime,
-                       EndTime = a.EndTime,
-                       AccommodationName = c.Name,
-                       RoomNumber = b.RoomNumber
-                   };
-
-
-                   /*
-                   join c on DbContext.Set<Accomodation>() b.ID equals c.TableBID
-                   join c on DbContext.Set<AppUser>() b.ID equals c.TableBID
-
-                   select selector;*/
-        }
-        [HttpGet]
-        [Route("u_reservations/{id}")]
-        public IQueryable<RoomReseravtion> GetUserRoomReseravtions(int id)
-        {
-            return db.RoomReseravtions.Where(res => res.AppUser_Id == id);
-        }
+       
 
         [HttpGet]
         [Route("reservation_preview")]
