@@ -154,7 +154,7 @@ namespace BookingApp.Controllers
             try
             {
                 db.SaveChanges();
-                NotificationHub.UpdateList(this.db.Accomodations.Where(x => x.Approved == false).ToList());
+                NotificationHub.UpdateList(this.db.Accomodations.Where(x => x.Approved).ToList());
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -189,7 +189,6 @@ namespace BookingApp.Controllers
 
             db.Accomodations.Add(accomodation);
             db.SaveChanges();
-
             return CreatedAtRoute("AccommodationApi", new { id = accomodation.Id }, accomodation);
         }
 
@@ -312,9 +311,17 @@ namespace BookingApp.Controllers
             {
                 return NotFound();
             }
+            var rooms = this.db.Rooms.Where(x => x.Accomodation_Id == id);
 
+            foreach (var room in rooms)
+            {
+                this.db.Entry(room).State=EntityState.Deleted;
+            }
+
+            this.db.SaveChanges();
             db.Accomodations.Remove(accomodation);
             db.SaveChanges();
+            NotificationHub.UpdateList(this.db.Accomodations.Where(x => x.Approved == true).ToList());
 
             return Ok(accomodation);
         }

@@ -22,20 +22,22 @@ namespace BookingApp.Hubs
         private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
         private static Dictionary<string, string> subscribed = new Dictionary<string, string>();
-        private static List<Accomodation> needToApprove = new List<Accomodation>();
+      //  private  List<Accomodation> needToApprove = new List<Accomodation>();
         private static List<Accomodation> ApprovedList = new List<Accomodation>();
+        List<Accomodation> accList = new List<Accomodation>();
+
         private BAContext db = new BAContext();
 
         private Thread thread;
 
         public NotificationHub()
         {
-            needToApprove = this.db.Accomodations.Where(x => x.Approved == false).ToList();
+            ApprovedList = this.db.Accomodations.Where(x => x.Approved).ToList();
         }
 
         public static void UpdateList(List<Accomodation> list )
         {
-            needToApprove = list;
+            ApprovedList = list;
         }
         public void Subscribe(string username, string role)
         {
@@ -64,17 +66,15 @@ namespace BookingApp.Hubs
 
         public void CheckAccomodations()
         {
+            var needToApprove = this.db.Accomodations.Where(x => x.Approved == false);
 
-            if (needToApprove.Count > 0)
-            {
-                var accList = needToApprove.Where(x => x.Approved == false);
-                Clients.Group("Admin").checkForApproveAcc(accList);
+            Clients.Group("Admin").checkForApproveAcc(needToApprove);
             //    Clients.Client(Context.ConnectionId).checkAccomodations(accList);
-            }
 
             if (ApprovedList.Count > 0)
             {
-                var accList = ApprovedList.Where(x => x.Approved);
+                this.accList.Clear();
+                accList.AddRange(ApprovedList.Where(x => x.Approved).ToList());
 
                 foreach (var acc in accList)
                 {
