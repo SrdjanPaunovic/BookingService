@@ -22,9 +22,8 @@ namespace BookingApp.Hubs
         private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
         private static Dictionary<string, string> subscribed = new Dictionary<string, string>();
-      //  private  List<Accomodation> needToApprove = new List<Accomodation>();
-        private static List<Accomodation> ApprovedList = new List<Accomodation>();
-        List<Accomodation> accList = new List<Accomodation>();
+        //  private  List<Accomodation> needToApprove = new List<Accomodation>();
+        private List<Accomodation> ApprovedList = new List<Accomodation>();
 
         private BAContext db = new BAContext();
 
@@ -35,9 +34,13 @@ namespace BookingApp.Hubs
             ApprovedList = this.db.Accomodations.Where(x => x.Approved).ToList();
         }
 
-        public static void UpdateList(List<Accomodation> list )
+        public static void NotifyManager(Accomodation acc, string username)
         {
-            ApprovedList = list;
+            //   ApprovedList = list;
+            if (subscribed.ContainsValue(username))
+            {
+                hubContext.Clients.Client(subscribed.FirstOrDefault(x => x.Value == username).Key).getApprovedAcc(acc);
+            }
         }
         public void Subscribe(string username, string role)
         {
@@ -70,13 +73,12 @@ namespace BookingApp.Hubs
 
             Clients.Group("Admin").checkForApproveAcc(needToApprove);
             //    Clients.Client(Context.ConnectionId).checkAccomodations(accList);
-
+/*
+            this.ApprovedList = this.db.Accomodations.Where(x => x.Approved).ToList();
             if (ApprovedList.Count > 0)
             {
-                this.accList.Clear();
-                accList.AddRange(ApprovedList.Where(x => x.Approved).ToList());
 
-                foreach (var acc in accList)
+                foreach (var acc in ApprovedList)
                 {
                     AppUser user = this.db.AppUsers.FirstOrDefault(x => x.Id == acc.AppUser_Id);
                     if (user != null)
@@ -84,12 +86,11 @@ namespace BookingApp.Hubs
                         if (subscribed.ContainsValue(user.UserName))
                         {
                             Clients.Client(subscribed.FirstOrDefault(x => x.Value == user.UserName).Key).getApprovedAcc(acc);
-                            ApprovedList.Remove(acc);
                         }
                     }
-                    
+
                 }
-            }
+            }*/
         }
 
         public void Hello()
@@ -104,7 +105,7 @@ namespace BookingApp.Hubs
             hubContext.Clients.Group("Admins").clickNotification($"Clicks: {clickCount}");
         }
 
-       
+
         public override Task OnDisconnected(bool stopCalled)
         {
             subscribed.Remove(Context.ConnectionId);

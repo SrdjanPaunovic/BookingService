@@ -89,7 +89,7 @@ namespace BookingApp.Controllers
         public IHttpActionResult GetAccomodationForUser(string username)
         {
 
-            List<Accomodation> accomodations = db.Accomodations.Where(x=>x.AppUser.UserName == username).ToList();
+            List<Accomodation> accomodations = db.Accomodations.Where(x => x.AppUser.UserName == username).ToList();
 
             if (accomodations == null)
             {
@@ -154,7 +154,14 @@ namespace BookingApp.Controllers
             try
             {
                 db.SaveChanges();
-                NotificationHub.UpdateList(this.db.Accomodations.Where(x => x.Approved).ToList());
+
+                AppUser appUser = this.db.AppUsers.FirstOrDefault(x => x.Id == accomodation.AppUser_Id);
+                if (appUser != null)
+                {
+                    NotificationHub.NotifyManager(accomodation, appUser.UserName);
+                }
+
+                //   NotificationHub.NotifyManager(this.db.Accomodations.Where(x => x.Approved).ToList());
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -234,7 +241,7 @@ namespace BookingApp.Controllers
                         }
                         else
                         {
-                            var myUniqueFileName = Guid.NewGuid().ToString().Substring(0,8);
+                            var myUniqueFileName = Guid.NewGuid().ToString().Substring(0, 8);
                             var filePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + myUniqueFileName + extension);
                             var relativePath = ServerLocalHost + "/Content/Images/" + myUniqueFileName + extension;
 
@@ -281,8 +288,8 @@ namespace BookingApp.Controllers
 
             foreach (var filePath in filePaths)
             {
-                
-                var  fullfilePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + Path.GetFileName(filePath));
+
+                var fullfilePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + Path.GetFileName(filePath));
                 if (File.Exists(fullfilePath))
                 {
                     retList.Add(filePath);
@@ -290,7 +297,7 @@ namespace BookingApp.Controllers
             }
 
             return retList;
-            
+
             /*//S2:Read File as Byte Array
             byte[] fileData = File.ReadAllBytes(filePath);
 
@@ -315,13 +322,12 @@ namespace BookingApp.Controllers
 
             foreach (var room in rooms)
             {
-                this.db.Entry(room).State=EntityState.Deleted;
+                this.db.Entry(room).State = EntityState.Deleted;
             }
 
             this.db.SaveChanges();
             db.Accomodations.Remove(accomodation);
             db.SaveChanges();
-            NotificationHub.UpdateList(this.db.Accomodations.Where(x => x.Approved == true).ToList());
 
             return Ok(accomodation);
         }
