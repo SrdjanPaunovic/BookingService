@@ -61,9 +61,25 @@ namespace BookingApp.Controllers
 
         // GET: api/Accomodations
         [HttpGet]
+        [AllowAnonymous]
         [Route("accommodations", Name = "AccommodationApi")]
         public IQueryable<Accomodation> GetAccomodations()
         {
+
+            var username = User.Identity.GetUserName();
+            if (username == null)
+            {
+                return this.db.Accomodations.Where(x => x.Approved);
+            }
+            var user = UserManager.FindByName(username);
+            var userRole = user.Roles.FirstOrDefault();
+            var role = db.Roles.SingleOrDefault(r => r.Id == userRole.RoleId);
+
+            if (role.Name == "AppUser")
+            {
+                return this.db.Accomodations.Where(x => x.Approved);
+            }
+
             return db.Accomodations;
         }
 

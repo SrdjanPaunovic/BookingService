@@ -13,12 +13,28 @@ using BookingApp.BindingModels;
 
 namespace BookingApp.Controllers
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.Owin;
 
     [RoutePrefix("comment")]
     public class CommentsController : ApiController
     {
         private BAContext db = new BAContext();
 
+
+        private ApplicationUserManager _userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         [HttpGet]
         [Route("comments", Name = "CommentApi")]
@@ -33,19 +49,43 @@ namespace BookingApp.Controllers
         {
             return db.Comments.Where(x=>x.Accomodation_Id == id);
         }
-             
 
-        // GET: api/Comments/5
-        [ResponseType(typeof(Comment))]
-        public IHttpActionResult GetComment(int id)
+
+        [HttpGet]
+        [Route("is_able_to_comment/{acc_id}")]
+        public IHttpActionResult GetIsAbleToComment(int acc_id)
         {
-            Comment comment = db.Comments.Find(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(comment);
+            var currentTime = DateTime.Now;
+
+            var username = User.Identity.GetUserName();
+            if (username == null)
+            {
+                return this.Ok("false");
+            }
+            var user = UserManager.FindByName(username);
+            var userRole = user.Roles.FirstOrDefault();
+            var role = db.Roles.SingleOrDefault(r => r.Id == userRole.RoleId);
+
+            if (role.Name != "AppUser")
+            {
+                return Ok("false");
+            }
+            int appUserId = user.appUserId;
+
+            var result = from a in db.RoomReseravtions
+                         join b in db.Rooms on a.Room_Id equals b.Id
+                         join c in db.Accomodations on  b.Accomodation_Id equals c.Id
+                         join d in db.AppUsers on a.AppUser_Id equals d.Id
+                         where d.Id == appUserId && c.Id == acc_id
+                         select a;
+
+            foreach (var res in result)
+            {
+                if (res.EndTime < currentTime) return Ok("true");
+            }
+           
+            return Ok("false");
         }
 
         // PUT: api/Comments/5

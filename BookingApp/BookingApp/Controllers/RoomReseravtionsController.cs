@@ -45,7 +45,7 @@ namespace BookingApp.Controllers
             return db.RoomReseravtions;
         }
 
-       
+
 
         [HttpGet]
         [Route("reservation_preview")]
@@ -70,7 +70,8 @@ namespace BookingApp.Controllers
                            StartTime = a.StartTime,
                            EndTime = a.EndTime,
                            AccommodationName = c.Name,
-                           RoomNumber = b.RoomNumber
+                           RoomNumber = b.RoomNumber,
+                           Username = a.AppUser.UserName
                        };
             }
             else if (role.Name.Equals("Admin"))
@@ -86,7 +87,9 @@ namespace BookingApp.Controllers
                            StartTime = a.StartTime,
                            EndTime = a.EndTime,
                            AccommodationName = c.Name,
-                           RoomNumber = b.RoomNumber
+                           RoomNumber = b.RoomNumber,
+                           Username = a.AppUser.UserName
+
                        };
 
 
@@ -105,11 +108,13 @@ namespace BookingApp.Controllers
                            StartTime = a.StartTime,
                            EndTime = a.EndTime,
                            AccommodationName = c.Name,
-                           RoomNumber = b.RoomNumber
+                           RoomNumber = b.RoomNumber,
+                           Username = a.AppUser.UserName
+
                        };
 
             }
-           
+
 
         }
 
@@ -176,7 +181,7 @@ namespace BookingApp.Controllers
             }
             var username = User.Identity.GetUserName();
             var user = UserManager.FindByName(username);
-            int userId = user.appUserId;           
+            int userId = user.appUserId;
             roomReseravation.AppUser_Id = userId;
 
             //TODO logika za provjeru
@@ -208,10 +213,21 @@ namespace BookingApp.Controllers
                 }
 
 
-            }else
+            }
+            else
             {
-                return Content(HttpStatusCode.BadRequest, "Room is busy at that time period");
+                var roomRes = this.db.RoomReseravtions.Where(x => x.Room_Id == roomReseravation.Room_Id).ToList();
 
+
+                string msg = "Room is busy at: ";
+
+                foreach (var roomRe in roomRes)
+                {
+                    msg += "  [" + roomRe.StartTime.Value.ToShortDateString() + "  -  " + roomRe.EndTime.Value.ToShortDateString() + "]";
+
+                }
+
+                return Content(HttpStatusCode.BadRequest, msg);
             }
 
 
@@ -219,7 +235,8 @@ namespace BookingApp.Controllers
             return CreatedAtRoute("ReservationApi", new { id = roomReseravation.Id }, roomReseravation);
         }
 
-        // DELETE: api/RoomReseravtions/5
+        [HttpDelete]
+        [Route("reservation/{id}")]
         [ResponseType(typeof(RoomReseravtion))]
         public IHttpActionResult DeleteRoomReseravtion(int id)
         {
@@ -254,20 +271,20 @@ namespace BookingApp.Controllers
             if (roomReservation.StartTime > roomReservation.EndTime)
                 return false;
             List<RoomReseravtion> reservationList = db.RoomReseravtions
-                .Where(reservation =>reservation.Room_Id == roomReservation.Room_Id)
+                .Where(reservation => reservation.Room_Id == roomReservation.Room_Id)
                 .ToList();
 
-            foreach(var reservation in reservationList)
+            foreach (var reservation in reservationList)
             {
                 if (Intersects(reservation, roomReservation))
                     return false;
             }
-            
+
             return true;
         }
 
 
-        public bool Intersects(RoomReseravtion reservation1,RoomReseravtion reservation2)
+        public bool Intersects(RoomReseravtion reservation1, RoomReseravtion reservation2)
         {
             if (reservation1.StartTime > reservation1.EndTime || reservation2.StartTime > reservation2.EndTime)
                 return false;
