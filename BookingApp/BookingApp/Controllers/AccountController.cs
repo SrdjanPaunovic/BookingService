@@ -18,6 +18,8 @@ using BookingApp.Models;
 using BookingApp.Providers;
 using BookingApp.Results;
 using System.Web.Http.Description;
+using System.Linq;
+using System.Data.Entity;
 
 namespace BookingApp.Controllers
 {
@@ -365,6 +367,42 @@ namespace BookingApp.Controllers
 
         #endregion
 
+        [HttpPost]
+        [Route("approve")]
+        public IHttpActionResult PostApproveUser(AppUser appUser)
+        {
+            var username = User.Identity.GetUserName();
+            var user = UserManager.FindByName(username);
+            var userRole = user.Roles.FirstOrDefault();
+            var role = db.Roles.SingleOrDefault(r => r.Id == userRole.RoleId);
+
+          if(  role.Name.Equals("Admin")){
+                appUser.IsForbidden = false;
+                db.Entry(appUser).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                    return Ok("Approved");
+                }
+                catch (Exception e)
+                {
+                    return InternalServerError(e);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+        [HttpGet]
+        [Route("userlist")]
+        public IHttpActionResult GetUserList()
+        {
+            return Ok(db.AppUsers);
+        }
+
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
@@ -375,7 +413,7 @@ namespace BookingApp.Controllers
                 return BadRequest(ModelState);
             }
             AppUser appUser = new AppUser();
-            appUser.IsForbidden=false;
+            appUser.IsForbidden=true;
             appUser.UserName=model.Username;
 
             db.AppUsers.Add(appUser);
