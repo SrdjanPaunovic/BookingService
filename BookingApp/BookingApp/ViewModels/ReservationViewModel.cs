@@ -14,7 +14,7 @@ namespace BookingApp.ViewModels
 
         public System.DateTime? EndTime { get; set; }
 
-        
+        public string Username { get; set; }
 
         public string AccommodationName { get; set; }
 
